@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # Servicio 1 - API REST (Backend)
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    container_name: proyecto_aso_backend
+    environment:
+      - DB_HOST=database
+      - DB_USER=postgres
+      - DB_PASSWORD=admin
+      - DB_NAME=mensajeria
+      - DB_PORT=5432
+      - AUTH_SERVICE_URL=http://autenticacion:8001
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+      autenticacion:
+        condition: service_started
+    networks:
+      - proyecto_network
+  # Servicio 2 - Base de Datos PostgreSQL
+  database:
+    image: postgres:15-alpine
+    container_name: proyecto_aso_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mensajeria
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - proyecto_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  # Servicio 3 - Frontend Web
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: proyecto_aso_frontend
+    environment:
+      - VITE_API_URL=http://localhost
+      - VITE_PORT=8000
+      - VITE_AUTH_URL=http://localhost:8001
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+      - autenticacion
+    networks:
+      - proyecto_network
+
+networks:
+  proyecto_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: proyecto_aso_postgres_data
+  auth_logs:
+    name: proyecto_aso_auth_logs
+  
+  # Servicio 4 - Servicio de Autenticación
+  autenticacion:
+    build:
+      context: ./autenticacion
+      dockerfile: Dockerfile
+    container_name: proyecto_aso_auth
+    environment:
+      - JWT_SECRET_KEY=clave_secreta_proyecto_aso_2024
+      - TOKEN_EXPIRE_MINUTES=30
+      - AUTH_SERVICE_PORT=8001
+      - ENVIRONMENT=production
+    ports:
+      - "8001:8001"
+    volumes:
+      - auth_logs:/app/logs
+    networks:
+      - proyecto_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
