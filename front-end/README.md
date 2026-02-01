@@ -1,16 +1,22 @@
-# React + Vite
+# Frontend-Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+* Creamos el fronted utilizando React+ Vite 
+* Utilizamos funciones tipo json js,css,html y jsx.
 
-Currently, two official plugins are available:
+# Servicios a consumir del backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* EN config.json podemos encontrar a nuestra URL de la ubicación del puerto del backend.
+* Los servicos que vamos a consumir desde el frontend al backend es health ,ademas tenemos el servicio para obtener datos mediante  getTestData , los dos servicios utilizan fetch y asi obtener la Data del backend en nuestra aplicacion , ademas al  definir estas funciones para  llamar los servicos getHealthCheck y getTestData si tengo Data se muestra el mensaje.
 
-## React Compiler
+* EN health retonarmos el status. 
+* En Data retornamos la lista de los objetos ,mensaje,autor.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# comandos de ejecución
+* cd npm install -> ingresamos a nnuetsra carpeta del front-end.
+* Run dev -> muestra la URL del loal host del front-end.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Integrante:Jessica Sanchez
+
+
+
